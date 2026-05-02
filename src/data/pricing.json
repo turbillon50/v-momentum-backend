@@ -1,0 +1,57 @@
+{
+  "currency": "MXN",
+  "plans": [
+    {
+      "id": "plan-1",
+      "name": "Plan 1 — Pago único",
+      "tagline": "Una sola exhibición, todo incluido.",
+      "type": "one_time",
+      "price": 12000,
+      "currency": "MXN",
+      "highlight": true,
+      "features": [
+        "PWA completa lista para producción",
+        "Integraciones base (pagos, auth, IA)",
+        "Asistente V configurado",
+        "Despliegue en dominio propio"
+      ]
+    },
+    {
+      "id": "plan-2",
+      "name": "Plan 2 — Anticipo + mensualidades",
+      "tagline": "Arranca con poco, paga conforme avanza.",
+      "type": "installments",
+      "downPayment": 3000,
+      "monthly": 1000,
+      "months": 11,
+      "total": 14000,
+      "currency": "MXN",
+      "features": [
+        "Mismo producto que el Plan 1",
+        "Anticipo de $3,000 MXN",
+        "11 mensualidades de $1,000 MXN",
+        "Soporte continuo durante el periodo"
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "id": "extra-app-store",
+      "name": "Publicación en App Store",
+      "price": 5000,
+      "currency": "MXN",
+      "description": "Cuenta de desarrollador, build firmado y revisión Apple."
+    },
+    {
+      "id": "extra-google-play",
+      "name": "Publicación en Google Play",
+      "price": 3000,
+      "currency": "MXN",
+      "description": "Cuenta de desarrollador, AAB firmado y revisión Google."
+    }
+  ],
+  "notes": [
+    "Precios en pesos mexicanos (MXN), IVA no incluido.",
+    "Las publicaciones en tiendas no incluyen las cuotas anuales de Apple/Google."
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "categories": [
+    {
+      "id": "pagos",
+      "name": "Pagos",
+      "description": "Cobros, suscripciones y dispersiones para LATAM y global.",
+      "items": [
+        { "id": "stripe", "name": "Stripe", "status": "ready", "scope": ["Tarjeta", "Suscripciones", "Webhooks"] },
+        { "id": "mercado-pago", "name": "Mercado Pago", "status": "ready", "scope": ["MX/LATAM", "OXXO", "SPEI"] },
+        { "id": "paypal", "name": "PayPal", "status": "planned", "scope": ["Checkout", "Suscripciones"] },
+        { "id": "conekta", "name": "Conekta", "status": "planned", "scope": ["MX", "OXXO"] }
+      ]
+    },
+    {
+      "id": "backend",
+      "name": "Backend",
+      "description": "Persistencia, auth y notificaciones del producto.",
+      "items": [
+        { "id": "postgres", "name": "PostgreSQL", "status": "ready", "scope": ["Datos", "Migraciones"] },
+        { "id": "supabase", "name": "Supabase", "status": "ready", "scope": ["DB", "Auth", "Storage"] },
+        { "id": "clerk", "name": "Clerk", "status": "ready", "scope": ["Auth", "Sesiones", "Orgs"] },
+        { "id": "resend", "name": "Resend", "status": "ready", "scope": ["Emails transaccionales"] }
+      ]
+    },
+    {
+      "id": "ia",
+      "name": "IA",
+      "description": "Asistente V y módulos generativos.",
+      "items": [
+        { "id": "openai", "name": "OpenAI", "status": "ready", "scope": ["GPT", "Embeddings"] },
+        { "id": "anthropic", "name": "Anthropic", "status": "ready", "scope": ["Claude", "Tool use"] },
+        { "id": "gemini", "name": "Google Gemini", "status": "planned", "scope": ["Multimodal"] },
+        { "id": "vector", "name": "Vector DB", "status": "planned", "scope": ["Pinecone", "pgvector"] }
+      ]
+    },
+    {
+      "id": "web3",
+      "name": "Web3",
+      "description": "Wallets, tokens y on-chain (opcional por proyecto).",
+      "items": [
+        { "id": "wallet-connect", "name": "WalletConnect", "status": "planned", "scope": ["EVM", "Sesiones"] },
+        { "id": "thirdweb", "name": "thirdweb", "status": "planned", "scope": ["Contratos", "Auth"] },
+        { "id": "alchemy", "name": "Alchemy", "status": "planned", "scope": ["RPC", "Webhooks"] }
+      ]
+    },
+    {
+      "id": "legal",
+      "name": "Legal",
+      "description": "Firma electrónica, KYC y cumplimiento.",
+      "items": [
+        { "id": "docusign", "name": "DocuSign", "status": "ready", "scope": ["Firma", "Plantillas"] },
+        { "id": "sumsub", "name": "Sumsub", "status": "ready", "scope": ["KYC/AML"] },
+        { "id": "iubenda", "name": "iubenda", "status": "planned", "scope": ["Privacidad", "Cookies"] }
+      ]
+    },
+    {
+      "id": "infraestructura",
+      "name": "Infraestructura",
+      "description": "Hosting, CDN y observabilidad.",
+      "items": [
+        { "id": "vercel", "name": "Vercel", "status": "ready", "scope": ["Hosting", "Edge"] },
+        { "id": "cloudflare", "name": "Cloudflare", "status": "ready", "scope": ["CDN", "DNS", "WAF"] },
+        { "id": "sentry", "name": "Sentry", "status": "planned", "scope": ["Errores", "Performance"] },
+        { "id": "datadog", "name": "Datadog", "status": "planned", "scope": ["Logs", "APM"] }
+      ]
+    }
+  ]
+}
