@@ -6,6 +6,11 @@ Express + persistencia JSON en disco. Todo arranca en `MOCK_MODE=true` para
 que el frontend pueda enchufarse y sentirse como producto real antes de tocar
 una sola llave de provider.
 
+> **¿Vienes a publicarlo?** Lee primero
+> [`docs/HANDOFF.md`](docs/HANDOFF.md) — son las 3 acciones manuales que
+> faltan para llevar esto a `vmomentum.app` (importar a Vercel, aplicar el
+> patch al PWA, comprar dominio). El resto está cocinado.
+
 ---
 
 ## Filosofía
@@ -52,9 +57,14 @@ Sin configurar nada más, ya tienes:
 
 ## Conexión con el frontend
 
+> **TL;DR:** el patch listo para aplicar al PWA está en
+> [`docs/pwa-integration/connect-backend.patch`](docs/pwa-integration/) — wirea
+> el formulario de contacto y agrega estados de loading / éxito / error.
+> Production build del PWA con el patch aplicado: ✅ pasa.
+
 El repo del frontend (`turbillon50/v-momentum-pwa`) **aún no llama a ningún
 backend** — los formularios solo hacen `console.log` y el chat de "V" es UI
-visual. Para enchufarlos:
+visual. Para enchufarlos manualmente:
 
 ### 1. Definir la URL del API en el frontend
 
