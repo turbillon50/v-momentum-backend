@@ -2,23 +2,40 @@
 
 const express = require('express');
 const assistant = require('../services/assistant');
-const { requireFields } = require('../middleware/validate');
+const { HttpError } = require('../middleware/error');
 const config = require('../config');
 
 const router = express.Router();
 
+// Accepts either:
+//   { input: 'text', context: 'precios', sessionId? }       (spec shape)
+//   { input: { message: 'text', context: 'precios' } }       (spec shape, nested)
+//   { message: 'text', context: 'precios', sessionId? }      (PWA shape)
 router.post('/', (req, res) => {
-  requireFields(req.body, ['input']);
-  const { input, context, sessionId } = req.body;
+  const body = req.body || {};
 
-  // input may be a plain string or an object { message, context }
-  const message = typeof input === 'string' ? input : input.message;
-  const ctx = (typeof input === 'object' && input.context) || context;
+  let message;
+  let context;
 
-  const response = assistant.reply({ message, context: ctx });
+  if (typeof body.input === 'string') {
+    message = body.input;
+    context = body.context;
+  } else if (body.input && typeof body.input === 'object') {
+    message = body.input.message;
+    context = body.input.context || body.context;
+  } else {
+    message = body.message;
+    context = body.context;
+  }
+
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    throw new HttpError(400, 'Missing required field', { field: 'message' });
+  }
+
+  const response = assistant.reply({ message, context });
 
   res.json({
-    sessionId: sessionId || `sess_${Date.now()}`,
+    sessionId: body.sessionId || `sess_${Date.now()}`,
     mockMode: config.mockMode,
     aiProviders: {
       openai: config.providers.openai,

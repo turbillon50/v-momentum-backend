@@ -11,52 +11,48 @@ const router = express.Router();
 const seedPath = path.join(config.paths.seed, 'integrations.json');
 const catalog = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
 
+// Map integration name → env var (truthy = real key configured).
+const PROVIDER_KEYS = {
+  Stripe: 'stripe',
+  'Mercado Pago': 'mercadoPago',
+  OpenAI: 'openai',
+  Anthropic: 'anthropic',
+  Clerk: 'clerk',
+  Resend: 'resend',
+  DocuSign: 'docusign',
+  Sumsub: 'sumsub',
+  Cloudflare: 'cloudflare',
+};
+
 function annotate(category) {
   return {
     ...category,
-    items: category.items.map((item) => ({
-      ...item,
-      configured: isConfigured(item.id),
-    })),
+    integrations: category.integrations.map((item) => {
+      const key = PROVIDER_KEYS[item.name];
+      return {
+        ...item,
+        configured: key ? !!config.providers[key] : false,
+      };
+    }),
   };
 }
 
-function isConfigured(id) {
-  switch (id) {
-    case 'stripe':
-      return config.providers.stripe;
-    case 'mercado-pago':
-      return config.providers.mercadoPago;
-    case 'openai':
-      return config.providers.openai;
-    case 'anthropic':
-      return config.providers.anthropic;
-    case 'clerk':
-      return config.providers.clerk;
-    case 'resend':
-      return config.providers.resend;
-    case 'docusign':
-      return config.providers.docusign;
-    case 'sumsub':
-      return config.providers.sumsub;
-    case 'cloudflare':
-      return config.providers.cloudflare;
-    default:
-      return false;
-  }
-}
-
+// Frontend expects an array of categories (matches the hardcoded shape it
+// already renders). `meta` carries non-breaking extras.
 router.get('/', (req, res) => {
   res.json({
-    mockMode: config.mockMode,
     categories: catalog.categories.map(annotate),
+    meta: {
+      mockMode: config.mockMode,
+      total: catalog.categories.reduce((n, c) => n + c.integrations.length, 0),
+    },
   });
 });
 
 router.get('/:categoryId', (req, res) => {
   const category = catalog.categories.find((c) => c.id === req.params.categoryId);
   if (!category) throw new HttpError(404, 'Category not found');
-  res.json({ mockMode: config.mockMode, category: annotate(category) });
+  res.json({ category: annotate(category), meta: { mockMode: config.mockMode } });
 });
 
 module.exports = router;

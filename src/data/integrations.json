@@ -1,67 +1,82 @@
 {
   "categories": [
     {
+      "id": "core",
+      "title": "Core App",
+      "icon": "Layers",
+      "integrations": [
+        { "name": "Clerk", "description": "Autenticación y gestión de usuarios", "whenUsed": "Apps con login", "clientBenefit": "Login seguro con múltiples métodos", "status": "included" },
+        { "name": "Supabase", "description": "Base de datos Postgres + auth + storage", "whenUsed": "Datos y archivos del producto", "clientBenefit": "Backend completo sin servidores", "status": "included" },
+        { "name": "Neon", "description": "PostgreSQL serverless", "whenUsed": "Cargas variables", "clientBenefit": "Escala a cero, paga lo que usas", "status": "optional" },
+        { "name": "Vercel", "description": "Hosting + edge functions", "whenUsed": "Despliegue de la PWA", "clientBenefit": "Deploys instantáneos en CDN global", "status": "included" },
+        { "name": "Cloudflare", "description": "DNS, CDN y seguridad", "whenUsed": "Tráfico de producción", "clientBenefit": "Sitio rápido y protegido contra ataques", "status": "included" }
+      ]
+    },
+    {
+      "id": "captacion",
+      "title": "Captación y Operación",
+      "icon": "Workflow",
+      "integrations": [
+        { "name": "Jotform", "description": "Formularios avanzados", "whenUsed": "Captación de leads", "clientBenefit": "Formularios sin código", "status": "optional" },
+        { "name": "Airtable", "description": "Base de datos visual", "whenUsed": "Operación interna", "clientBenefit": "Tablero compartido tipo hoja de cálculo", "status": "optional" },
+        { "name": "Make", "description": "Automatizaciones", "whenUsed": "Conectar herramientas", "clientBenefit": "Automatiza tareas repetitivas", "status": "optional" },
+        { "name": "ClickUp", "description": "Gestión de proyecto", "whenUsed": "Seguimiento", "clientBenefit": "Visibilidad del avance del proyecto", "status": "optional" },
+        { "name": "Resend", "description": "Emails transaccionales", "whenUsed": "Confirmaciones, recibos", "clientBenefit": "Emails que llegan a la bandeja principal", "status": "included" }
+      ]
+    },
+    {
       "id": "pagos",
-      "name": "Pagos",
-      "description": "Cobros, suscripciones y dispersiones para LATAM y global.",
-      "items": [
-        { "id": "stripe", "name": "Stripe", "status": "ready", "scope": ["Tarjeta", "Suscripciones", "Webhooks"] },
-        { "id": "mercado-pago", "name": "Mercado Pago", "status": "ready", "scope": ["MX/LATAM", "OXXO", "SPEI"] },
-        { "id": "paypal", "name": "PayPal", "status": "planned", "scope": ["Checkout", "Suscripciones"] },
-        { "id": "conekta", "name": "Conekta", "status": "planned", "scope": ["MX", "OXXO"] }
-      ]
-    },
-    {
-      "id": "backend",
-      "name": "Backend",
-      "description": "Persistencia, auth y notificaciones del producto.",
-      "items": [
-        { "id": "postgres", "name": "PostgreSQL", "status": "ready", "scope": ["Datos", "Migraciones"] },
-        { "id": "supabase", "name": "Supabase", "status": "ready", "scope": ["DB", "Auth", "Storage"] },
-        { "id": "clerk", "name": "Clerk", "status": "ready", "scope": ["Auth", "Sesiones", "Orgs"] },
-        { "id": "resend", "name": "Resend", "status": "ready", "scope": ["Emails transaccionales"] }
-      ]
-    },
-    {
-      "id": "ia",
-      "name": "IA",
-      "description": "Asistente V y módulos generativos.",
-      "items": [
-        { "id": "openai", "name": "OpenAI", "status": "ready", "scope": ["GPT", "Embeddings"] },
-        { "id": "anthropic", "name": "Anthropic", "status": "ready", "scope": ["Claude", "Tool use"] },
-        { "id": "gemini", "name": "Google Gemini", "status": "planned", "scope": ["Multimodal"] },
-        { "id": "vector", "name": "Vector DB", "status": "planned", "scope": ["Pinecone", "pgvector"] }
+      "title": "Pagos",
+      "icon": "CreditCard",
+      "integrations": [
+        { "name": "Stripe", "description": "Cobros con tarjeta y suscripciones", "whenUsed": "Cobros globales", "clientBenefit": "Estándar mundial, suscripciones listas", "status": "included" },
+        { "name": "Mercado Pago", "description": "Cobros LATAM (OXXO, SPEI, tarjeta)", "whenUsed": "Clientes en México y LATAM", "clientBenefit": "Métodos locales que tus clientes ya usan", "status": "included" }
       ]
     },
     {
       "id": "web3",
-      "name": "Web3",
-      "description": "Wallets, tokens y on-chain (opcional por proyecto).",
-      "items": [
-        { "id": "wallet-connect", "name": "WalletConnect", "status": "planned", "scope": ["EVM", "Sesiones"] },
-        { "id": "thirdweb", "name": "thirdweb", "status": "planned", "scope": ["Contratos", "Auth"] },
-        { "id": "alchemy", "name": "Alchemy", "status": "planned", "scope": ["RPC", "Webhooks"] }
+      "title": "Web3 / Fintech",
+      "icon": "Coins",
+      "integrations": [
+        { "name": "Turnkey", "description": "Wallets como servicio", "whenUsed": "Custodia de llaves", "clientBenefit": "Wallets sin que el usuario gestione llaves", "status": "advanced" },
+        { "name": "Alchemy", "description": "RPC + indexación on-chain", "whenUsed": "Integraciones blockchain", "clientBenefit": "Datos on-chain confiables", "status": "advanced" },
+        { "name": "LI.FI", "description": "Bridging y swaps cross-chain", "whenUsed": "Movimiento entre cadenas", "clientBenefit": "Una API para múltiples blockchains", "status": "advanced" },
+        { "name": "Onramper", "description": "Compra de cripto con tarjeta", "whenUsed": "On-ramp fiat → cripto", "clientBenefit": "Tus usuarios entran a Web3 con tarjeta", "status": "advanced" },
+        { "name": "Safe", "description": "Multi-sig de tesorería", "whenUsed": "Custodia compartida", "clientBenefit": "Aprobaciones múltiples para fondos", "status": "advanced" },
+        { "name": "Bybit", "description": "Exchange / liquidez", "whenUsed": "Trading o liquidez", "clientBenefit": "Acceso a mercados globales", "status": "future" }
+      ]
+    },
+    {
+      "id": "experiencias",
+      "title": "Experiencias / Comercio",
+      "icon": "Sparkles",
+      "integrations": [
+        { "name": "Duffel", "description": "API de viajes (vuelos)", "whenUsed": "Productos de viaje", "clientBenefit": "Vende vuelos desde tu app", "status": "advanced" },
+        { "name": "Reloadly", "description": "Recargas y gift cards", "whenUsed": "Productos digitales", "clientBenefit": "Saldo y gift cards globales", "status": "advanced" },
+        { "name": "Ticket Tailor", "description": "Venta de boletos", "whenUsed": "Eventos", "clientBenefit": "Tu propia ticketera, sin comisiones por boleto", "status": "advanced" }
       ]
     },
     {
       "id": "legal",
-      "name": "Legal",
-      "description": "Firma electrónica, KYC y cumplimiento.",
-      "items": [
-        { "id": "docusign", "name": "DocuSign", "status": "ready", "scope": ["Firma", "Plantillas"] },
-        { "id": "sumsub", "name": "Sumsub", "status": "ready", "scope": ["KYC/AML"] },
-        { "id": "iubenda", "name": "iubenda", "status": "planned", "scope": ["Privacidad", "Cookies"] }
+      "title": "Legal",
+      "icon": "Scale",
+      "integrations": [
+        { "name": "Sumsub", "description": "KYC / AML", "whenUsed": "Verificación de identidad", "clientBenefit": "Cumplimiento sin construir nada", "status": "advanced" },
+        { "name": "DocuSign", "description": "Firma electrónica", "whenUsed": "Contratos digitales", "clientBenefit": "Firma vinculante en minutos", "status": "optional" }
       ]
     },
     {
-      "id": "infraestructura",
-      "name": "Infraestructura",
-      "description": "Hosting, CDN y observabilidad.",
-      "items": [
-        { "id": "vercel", "name": "Vercel", "status": "ready", "scope": ["Hosting", "Edge"] },
-        { "id": "cloudflare", "name": "Cloudflare", "status": "ready", "scope": ["CDN", "DNS", "WAF"] },
-        { "id": "sentry", "name": "Sentry", "status": "planned", "scope": ["Errores", "Performance"] },
-        { "id": "datadog", "name": "Datadog", "status": "planned", "scope": ["Logs", "APM"] }
+      "id": "desarrollo",
+      "title": "Diseño / Desarrollo",
+      "icon": "Code2",
+      "integrations": [
+        { "name": "v0", "description": "Generación de UI con IA", "whenUsed": "Iteración visual", "clientBenefit": "Prototipos en minutos", "status": "included" },
+        { "name": "Claude Design", "description": "Diseño asistido por IA", "whenUsed": "Decisiones de UX", "clientBenefit": "Criterio de diseño con IA top", "status": "included" },
+        { "name": "Cursor", "description": "Editor con IA", "whenUsed": "Desarrollo diario", "clientBenefit": "Velocidad de desarrollo 10x", "status": "included" },
+        { "name": "GitHub", "description": "Control de versiones", "whenUsed": "Todo el código", "clientBenefit": "Tu código auditable y respaldado", "status": "included" },
+        { "name": "Replit", "description": "Entornos de desarrollo en la nube", "whenUsed": "Pruebas rápidas", "clientBenefit": "Ambientes listos sin instalar nada", "status": "optional" },
+        { "name": "Codex", "description": "Generación de código con IA", "whenUsed": "Tareas repetitivas", "clientBenefit": "Boilerplate automático", "status": "optional" },
+        { "name": "Claude Code", "description": "Desarrollo agentic en terminal", "whenUsed": "Tareas multi-archivo", "clientBenefit": "Refactors y features completos sin fricción", "status": "included" }
       ]
     }
   ]
