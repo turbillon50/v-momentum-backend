@@ -11,13 +11,19 @@ function buildApp() {
 
   app.disable('x-powered-by');
 
+  // Auto-allow our Vercel previews and the production apex when configured.
+  // CORS_ORIGINS still wins as the explicit allow-list in dev / staging.
+  const VERCEL_HOST_RE = /^https:\/\/v0-v-momentum[a-z0-9-]*\.vercel\.app$/i;
+  const PWA_HOST_RE = /^https:\/\/(www\.)?vmomentum\.(app|com|mx)$/i;
+
   app.use(
     cors({
       origin(origin, cb) {
-        // Allow same-origin / curl / mobile (no Origin header).
-        if (!origin) return cb(null, true);
+        if (!origin) return cb(null, true); // curl / mobile / same-origin
         if (config.corsOrigins.includes('*')) return cb(null, true);
         if (config.corsOrigins.includes(origin)) return cb(null, true);
+        if (VERCEL_HOST_RE.test(origin)) return cb(null, true);
+        if (PWA_HOST_RE.test(origin)) return cb(null, true);
         return cb(new Error(`Origin ${origin} not allowed by CORS`));
       },
       credentials: true,

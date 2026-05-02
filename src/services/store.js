@@ -5,7 +5,28 @@ const path = require('path');
 const crypto = require('crypto');
 const config = require('../config');
 
+// Two backends:
+//   - "memory":   process-local arrays. Used in serverless (VERCEL=1) or when
+//                 STORE_BACKEND=memory is set. Data is lost on cold start —
+//                 fine for catalogs (which come from seed JSON) and for the
+//                 demo phase, but leads / projects need a real DB before going
+//                 fully public. Switch to DATABASE_URL when ready.
+//   - "file":     persists to data/runtime/<collection>.json. Default in dev.
+
+const BACKEND =
+  process.env.STORE_BACKEND ||
+  (process.env.VERCEL || process.env.NOW_REGION ? 'memory' : 'file');
+
 const RUNTIME_DIR = config.paths.runtime;
+const memory = new Map(); // collection -> array
+
+function readMemory(collection) {
+  return memory.get(collection) || [];
+}
+
+function writeMemory(collection, items) {
+  memory.set(collection, items);
+}
 
 function ensureRuntimeDir() {
   if (!fs.existsSync(RUNTIME_DIR)) {
@@ -13,13 +34,13 @@ function ensureRuntimeDir() {
   }
 }
 
-function filePath(collection) {
+function filePathFor(collection) {
   return path.join(RUNTIME_DIR, `${collection}.json`);
 }
 
-function readCollection(collection) {
+function readFile(collection) {
   ensureRuntimeDir();
-  const file = filePath(collection);
+  const file = filePathFor(collection);
   if (!fs.existsSync(file)) return [];
   try {
     const raw = fs.readFileSync(file, 'utf8');
@@ -31,9 +52,17 @@ function readCollection(collection) {
   }
 }
 
-function writeCollection(collection, items) {
+function writeFile(collection, items) {
   ensureRuntimeDir();
-  fs.writeFileSync(filePath(collection), JSON.stringify(items, null, 2), 'utf8');
+  fs.writeFileSync(filePathFor(collection), JSON.stringify(items, null, 2), 'utf8');
+}
+
+function readCollection(collection) {
+  return BACKEND === 'memory' ? readMemory(collection) : readFile(collection);
+}
+
+function writeCollection(collection, items) {
+  return BACKEND === 'memory' ? writeMemory(collection, items) : writeFile(collection, items);
 }
 
 function newId(prefix) {
@@ -97,4 +126,5 @@ module.exports = {
   update,
   remove,
   newId,
+  backend: BACKEND,
 };
