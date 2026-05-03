@@ -6,10 +6,11 @@ This folder contains the **single patch** that wires the V Momentum PWA
 ## What the patch does
 
 - Adds `lib/api.ts` — a typed fetch client that reads `NEXT_PUBLIC_API_URL`.
-- Modifies `components/sections/contact-section.tsx`:
-  - Wires `handleSubmit` to `POST /api/leads` (was `console.log`).
-  - Replaces the blocking `alert()` with inline success/error banners and a
-    loading spinner on the submit button.
+- Modifies `components/screens/contact-screen.tsx` (the active form in the
+  current screens-based UI):
+  - Wires `handleSubmit` to `POST /api/leads` (was `setTimeout` + setSubmitted).
+  - Adds inline error banner above the submit button.
+  - Shows the backend `lead_xxx` ID under the success message.
   - If `NEXT_PUBLIC_API_URL` is not set, falls back to "soft success" so previews
     don't look broken before the backend is wired.
 

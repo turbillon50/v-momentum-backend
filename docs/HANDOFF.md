@@ -1,8 +1,16 @@
 # Handoff — V Momentum a producción
 
-Documento corto y operativo para cerrar el ciclo de "publicación" del MVP.
-Todo lo programable está listo. Lo que falta son **3 acciones manuales tuyas**
-de menos de 10 minutos en total.
+> **🚀 Estado actual: PUBLICADO Y FUNCIONANDO**
+>
+> - **Backend:** https://v-momentum-backend.vercel.app · `/api/health` → ok
+> - **PWA:**     https://v0-v-momentum-pwa.vercel.app · form conectado
+> - **Lead test E2E:** `lead_59371eb6d474` aceptado por backend desde origin del PWA
+>
+> El único paso pendiente para que sea "producto en producción" es comprar el
+> dominio `vmomentum.app` ($14.99 USD/año) y attacharlo al proyecto del PWA.
+> Las integraciones reales (Stripe, Resend, Clerk, IA) son la siguiente fase.
+
+Documento original (los 3 pasos manuales) — ya solo aplica el #3:
 
 ---
 

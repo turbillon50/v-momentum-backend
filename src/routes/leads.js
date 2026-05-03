@@ -20,6 +20,8 @@ const ENGLISH_FIELDS = [
   'storePublish',
   'urgency',
   'description',
+  'message',  // alias for description (newer PWA form uses this)
+  'budget',   // newer PWA form
   'consent',
 ];
 
@@ -52,7 +54,7 @@ function normalize(input) {
   const empresa = es.empresa ?? en.company ?? null;
   const tipoProyecto = es.tipoProyecto ?? en.projectType ?? null;
   const plan = es.plan ?? en.plan ?? null;
-  const mensaje = es.mensaje ?? en.description ?? null;
+  const mensaje = es.mensaje ?? en.description ?? en.message ?? null;
 
   return {
     // canonical (Spanish, per spec)
@@ -72,6 +74,8 @@ function normalize(input) {
     company: empresa,
     projectType: tipoProyecto,
     description: mensaje,
+    message: mensaje,
+    budget: en.budget ?? null,
     storePublish: en.storePublish ?? null,
     urgency: en.urgency ?? null,
     consent: typeof en.consent === 'boolean' ? en.consent : null,
