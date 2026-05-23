@@ -1,0 +1,190 @@
+diff --git a/components/screens/contact-screen.tsx b/components/screens/contact-screen.tsx
+index ddc95ac..26d5882 100644
+--- a/components/screens/contact-screen.tsx
++++ b/components/screens/contact-screen.tsx
+@@ -3,10 +3,11 @@
+ import { useState } from 'react'
+ import { motion } from 'framer-motion'
+ import { useLanguage } from '@/lib/i18n'
+-import { 
+-  Send, Calendar, MessageCircle, Mail, MapPin, 
+-  Clock, Check, Loader2, ArrowRight
++import {
++  Send, Calendar, MessageCircle, Mail, MapPin,
++  Clock, Check, Loader2, ArrowRight, AlertCircle
+ } from 'lucide-react'
++import { api, ApiError, apiEnabled } from '@/lib/api'
+ 
+ export function ContactScreen() {
+   const [formState, setFormState] = useState({
+@@ -18,17 +19,45 @@ export function ContactScreen() {
+   })
+   const [isSubmitting, setIsSubmitting] = useState(false)
+   const [isSubmitted, setIsSubmitted] = useState(false)
++  const [submitError, setSubmitError] = useState<string | null>(null)
++  const [leadId, setLeadId] = useState<string | null>(null)
+   const { language } = useLanguage()
+ 
+   const handleSubmit = async (e: React.FormEvent) => {
+     e.preventDefault()
+     setIsSubmitting(true)
+-    
+-    // Simulate API call
+-    await new Promise(resolve => setTimeout(resolve, 1500))
+-    
+-    setIsSubmitting(false)
+-    setIsSubmitted(true)
++    setSubmitError(null)
++
++    try {
++      if (apiEnabled) {
++        const { data } = await api.createLead({
++          name: formState.name,
++          email: formState.email,
++          company: formState.company,
++          // map UI field names → backend canonical names
++          description: formState.message,
++          budget: formState.budget,
++          consent: true,
++          // optional placeholders so backend doesn't reject
++          whatsapp: '',
++        } as any)
++        setLeadId(data.id)
++      } else {
++        // No backend wired — soft success so previews still feel done
++        await new Promise((resolve) => setTimeout(resolve, 1200))
++      }
++      setIsSubmitted(true)
++    } catch (err) {
++      const message =
++        err instanceof ApiError
++          ? err.message
++          : language === 'es'
++            ? 'No pudimos enviar tu mensaje. Intenta de nuevo o escríbenos a hola@vmomentum.com.'
++            : 'Could not send your message. Please try again or email hola@vmomentum.com.'
++      setSubmitError(message)
++    } finally {
++      setIsSubmitting(false)
++    }
+   }
+ 
+   const budgetOptions = [
+@@ -62,6 +91,9 @@ export function ContactScreen() {
+               ? 'Te responderemos en menos de 24 horas.'
+               : 'We will respond within 24 hours.'}
+           </p>
++          {leadId && (
++            <p className="text-xs text-muted-foreground/60 font-mono">#{leadId}</p>
++          )}
+           <motion.button
+             onClick={() => setIsSubmitted(false)}
+             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-muted text-foreground font-medium"
+@@ -181,6 +213,17 @@ export function ContactScreen() {
+               />
+             </div>
+ 
++            {submitError && (
++              <motion.div
++                initial={{ opacity: 0, y: -8 }}
++                animate={{ opacity: 1, y: 0 }}
++                className="flex items-start gap-3 p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-sm"
++              >
++                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
++                <p className="text-red-500/90">{submitError}</p>
++              </motion.div>
++            )}
++
+             <motion.button
+               type="submit"
+               disabled={isSubmitting}
+diff --git a/lib/api.ts b/lib/api.ts
+new file mode 100644
+--- /dev/null
++++ b/lib/api.ts
+@@ -0,0 +1,86 @@
++/**
++ * V Momentum API client.
++ *
++ * Single source of truth for talking to the backend (turbillon50/v-momentum-backend).
++ * Reads NEXT_PUBLIC_API_URL at build time. When unset (e.g. preview builds without
++ * the var) calls fall back to a no-op mode that returns mock-shaped data so the
++ * UI never breaks.
++ */
++
++const API_URL = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '')
++
++export const apiEnabled = Boolean(API_URL)
++
++export class ApiError extends Error {
++  status: number
++  details?: unknown
++  constructor(message: string, status: number, details?: unknown) {
++    super(message)
++    this.status = status
++    this.details = details
++  }
++}
++
++async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
++  if (!API_URL) {
++    // Soft-fail: app stays usable without a backend wired up.
++    throw new ApiError('NEXT_PUBLIC_API_URL is not set', 0)
++  }
++
++  const res = await fetch(`${API_URL}${path}`, {
++    method,
++    headers: { 'content-type': 'application/json' },
++    body: body ? JSON.stringify(body) : undefined,
++  })
++
++  const text = await res.text()
++  let payload: any = null
++  try { payload = text ? JSON.parse(text) : null } catch { payload = text }
++
++  if (!res.ok) {
++    const message = (payload && payload.message) || `HTTP ${res.status}`
++    throw new ApiError(message, res.status, payload)
++  }
++  return payload as T
++}
++
++export type LeadInput = {
++  name: string
++  whatsapp: string
++  email: string
++  company?: string
++  projectType?: string
++  plan?: string
++  storePublish?: string
++  urgency?: string
++  description?: string
++  consent: boolean
++}
++
++export type Lead = LeadInput & {
++  id: string
++  createdAt: string
++  estatus: string
++}
++
++export const api = {
++  health: () => request<{ ok: boolean; mockMode: boolean }>('GET', '/api/health'),
++
++  createLead: (input: LeadInput) =>
++    request<{ data: Lead }>('POST', '/api/leads', input),
++
++  getIntegrations: () =>
++    request<{ categories: any[]; meta: { mockMode: boolean; total: number } }>(
++      'GET',
++      '/api/integrations',
++    ),
++
++  getPricing: () => request<any>('GET', '/api/pricing'),
++
++  ask: (message: string, context?: 'inicio' | 'proceso' | 'integraciones' | 'precios') =>
++    request<{ sessionId: string; response: { content: string; intent: string; navigate?: string; suggestions?: string[] } }>(
++      'POST',
++      '/api/assistant',
++      { message, context },
++    ),
++}

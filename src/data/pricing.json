@@ -1,0 +1,53 @@
+{
+  "currency": "MXN",
+  "plans": [
+    {
+      "id": "traditional",
+      "name": "Plan Tradicional",
+      "tag": "PVA: Producto Viable Aplicable",
+      "type": "one_time",
+      "price": 12000,
+      "currency": "MXN",
+      "deliveryTime": "2 a 10 días hábiles",
+      "highlight": true,
+      "schedule": [
+        { "id": "down", "label": "Enganche al iniciar", "percentage": 50, "amount": 6000 },
+        { "id": "quote", "label": "Al aprobar la cotización", "percentage": 25, "amount": 3000 },
+        { "id": "delivery", "label": "Al entregar el proyecto", "percentage": 25, "amount": 3000 }
+      ]
+    },
+    {
+      "id": "flexible",
+      "name": "Plan Flexible",
+      "tag": "Pagos cómodos",
+      "type": "installments",
+      "downPayment": 3000,
+      "monthly": 1000,
+      "months": 11,
+      "total": 14000,
+      "currency": "MXN"
+    }
+  ],
+  "storeAddons": [
+    { "id": "ios", "platform": "App Store iOS", "price": 5000, "currency": "MXN" },
+    { "id": "android", "platform": "Google Play Android", "price": 3000, "currency": "MXN" }
+  ],
+  "included": [
+    "Landing / PWA funcional",
+    "Diseño premium",
+    "Autenticación",
+    "Base de datos",
+    "Formularios",
+    "Emails",
+    "Pagos",
+    "Deploy",
+    "Dominio configurado",
+    "Integraciones según proyecto",
+    "Soporte inicial",
+    "Escalabilidad futura"
+  ],
+  "notes": [
+    "Precios en pesos mexicanos (MXN), IVA no incluido.",
+    "Las publicaciones en tiendas no incluyen las cuotas anuales de Apple/Google."
+  ]
+}
